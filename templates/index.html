@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UKL Q and A</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px 0;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-size: 18px;
+            color: #333;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 80%; /* Increased width to 80% */
+            padding: 10px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center; /* Center the text within the input field */
+        }
+
+        input[type="submit"] {
+            background-color: #3498db;
+            color: #fff;
+            font-size: 18px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px; /* Add margin to the submit button */
+        }
+
+        input[type="submit"]:hover {
+            background-color: #297fb8;
+        }
+
+        #answer {
+            font-size: 20px;
+            color: #333;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>UKL Q and A</h1>
+    <p>Ask your questions and get answers!</p>
+    <form action="/get_answer" method="post">
+        <label for="question">Ask a Question:</label>
+        <input type="text" name="question" id="question" placeholder="Enter your question here">
+        <input type="submit" value="Get Answer">
+    </form>
+    <h2>Answer</h2>
+    <p id="answer"></p>
+
+
+
+<script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const questionInput = document.getElementById('question');
+        const question = questionInput.value;
+        if (question) {
+            fetch('/get_answer', {
+                method: 'POST',
+                body: new URLSearchParams({ 'question': question }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.text())
+            .then(answer => {
+                document.getElementById('answer').textContent = answer;
+                questionInput.value = '';  // Clear the input field
+            });
+        }
+    });
+</script>
+
+<!-- JavaScript for client-side form validation -->
+<script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+        const questionInput = document.getElementById('question');
+        const question = questionInput.value.trim();
+        if (!question) {
+            alert('Please enter a valid question.');
+            e.preventDefault();  // Prevent form submission
+        }
+    });
+</script>
+
+<!-- JavaScript for smooth scrolling when a question is submitted -->
+<script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const questionSection = document.getElementById('answer');
+        const question = questionSection.offsetTop;
+        window.scrollTo({
+            top: question,
+            behavior: 'smooth'
+        });
+    });
+</script>
+
+</body>
+</html>
